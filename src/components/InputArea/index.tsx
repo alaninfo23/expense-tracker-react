@@ -54,14 +54,14 @@ export const InputArea = ({ onAdd }: Props) => {
   }
 
   return (
-      <C.Container>
+      <C.Container data-testid='INPUT_AREA'>
         <C.InputLabel>
           <C.InputTitle>Data</C.InputTitle>
-          <C.Input type="date" value={dateField} onChange={e => setDateField(e.target.value)} />
+          <C.Input type="date" value={dateField} onChange={e => setDateField(e.target.value)} data-testid='INPUT_DATA_ITEM'/>
         </C.InputLabel>
         <C.InputLabel>
           <C.InputTitle>Categoria</C.InputTitle>
-          <C.Select value={categoryField} onChange={e => setCategoryField(e.target.value)}>
+          <C.Select value={categoryField} onChange={e => setCategoryField(e.target.value)} data-testid='INPUT_CATEG_ITEM'>
             <>
               <option></option>
               {categoryKeys.map((key, index) => (
@@ -72,15 +72,15 @@ export const InputArea = ({ onAdd }: Props) => {
         </C.InputLabel>
         <C.InputLabel>
           <C.InputTitle>Título</C.InputTitle>
-          <C.Input type="text" value={titleField} onChange={e => setTitleField(e.target.value)} />
+          <C.Input type="text" value={titleField} onChange={e => setTitleField(e.target.value)} data-testid='INPUT_TITLE_ITEM'/>
         </C.InputLabel>
         <C.InputLabel>
           <C.InputTitle>Valor</C.InputTitle>
-          <C.Input type="number" value={valueField} onChange={e => setValueField(parseFloat(e.target.value))} />
+          <C.Input type="number" value={valueField} onChange={e => setValueField(parseFloat(e.target.value))} data-testid='INPUT_VALUE_ITEM'/>
         </C.InputLabel>
         <C.InputLabel>
           <C.InputTitle>&nbsp;</C.InputTitle>
-          <C.Button onClick={handleAddEvent}>Adicionar</C.Button>
+          <C.Button onClick={handleAddEvent} data-testid='BUTTON_ADD_ITEM'>Adicionar</C.Button>
         </C.InputLabel>
       </C.Container>
   );

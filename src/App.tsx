@@ -34,7 +34,7 @@ const App = () => {
     setIncome(incomeCount);
     setExpense(expenseCount);
   }, [filteredList]);
-
+ 
   const handleMonthChange = (newMonth: string) => {
     setCurrentMonth(newMonth);
   }
@@ -51,7 +51,10 @@ const App = () => {
         <C.HeaderText>Sistema Financeiro</C.HeaderText>
       </C.Header>
       <C.Body>
-        
+        {/* Foi criado uma pasta data c/ 2 arquivos categories e items.ts
+        que é onde fica os itens que serão mostrados na área, tbm há
+        a pasta types onde fica os tipos de itens que serao mostrados.
+        serve para tipar os items e categorias q foram criados   */}
         <InfoArea
           currentMonth={currentMonth}
           onMonthChange={handleMonthChange}

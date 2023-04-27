@@ -26,11 +26,11 @@ export const InfoArea = ({ currentMonth, onMonthChange, income, expense }: Props
     }
 
     return (
-        <C.Container>
+        <C.Container data-testid='INFO-AREA'>
             <C.MonthArea>
-                <C.MonthArrow onClick={handlePrevMonth}>⬅️</C.MonthArrow>
-                <C.MonthTitle>{formatCurrentMonth(currentMonth)}</C.MonthTitle>
-                <C.MonthArrow onClick={handleNextMonth}>➡️</C.MonthArrow>
+                <C.MonthArrow onClick={handlePrevMonth} data-testid='PREV_MONTH'>⬅️</C.MonthArrow>
+                <C.MonthTitle data-testid='CURRENT_MONTH'>{formatCurrentMonth(currentMonth)}</C.MonthTitle>
+                <C.MonthArrow onClick={handleNextMonth} data-testid='NEXT_MONTH'>➡️</C.MonthArrow>
             </C.MonthArea>
             <C.ResumeArea>
                 <ResumeItem title="Receitas" value={income} />

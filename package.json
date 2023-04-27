@@ -17,6 +17,9 @@
     "typescript": "^4.4.3",
     "web-vitals": "^1.1.2"
   },
+  "jest": {
+
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -42,6 +45,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
     "@types/styled-components": "^5.1.14"
   }
 }
