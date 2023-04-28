@@ -1,5 +1,5 @@
 //import React from "react";
-import { render, screen, within, waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../App";
 
@@ -72,8 +72,7 @@ describe("First test", () => {
 
   it("should be possible to view the current month in the format Abril de 2023, for example.", () => {});
 
-  it("should be possible to view the fields Receitas, Despesas, and Balanço in the information area", async () => {
-    //await waitFor(() => screen.getByTestId(INFO_AREA_ID));
+  it("should be possible to view the fields Receitas, Despesas, and Balanço in the information area", () => {
 
     const info = within(screen.getByTestId(INFO_AREA_ID));
     function formatDate(date = new Date()) {

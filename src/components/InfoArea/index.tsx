@@ -26,7 +26,7 @@ export const InfoArea = ({ currentMonth, onMonthChange, income, expense }: Props
     }
 
     return (
-        <C.Container data-testid='INFO-AREA'>
+        <C.Container data-testid='INFO_AREA'>
             <C.MonthArea>
                 <C.MonthArrow onClick={handlePrevMonth} data-testid='PREV_MONTH'>⬅️</C.MonthArrow>
                 <C.MonthTitle data-testid='CURRENT_MONTH'>{formatCurrentMonth(currentMonth)}</C.MonthTitle>
