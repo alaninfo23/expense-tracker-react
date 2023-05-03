@@ -36,8 +36,6 @@ describe("First test", () => {
 /*   beforeEach(() => {
     render(<App />);
   }); */
-
-
   beforeAll(() => {
     const originalAlert = window.alert;
     window.alert = jest.fn();
