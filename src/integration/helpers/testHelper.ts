@@ -19,5 +19,9 @@ export const BUTTON_ADD_ITEM_ID = "BUTTON_ADD_ITEM";
 /* TABLE AREA */
 export const TABLE_AREA_ID = "TABLE_AREA";
 
+/* HEADER AREA */
+export const HEADER_AREA_ID = "HEADER_AREA";
+
+
 /* export const addValor = (categInput, titleInput, valorInput) => {
 }; */

@@ -46,7 +46,7 @@ const App = () => {
   }
 
   return (
-    <C.Container>
+    <C.Container data-testid='HEADER_AREA'>
       <C.Header>
         <C.HeaderText>Sistema Financeiro</C.HeaderText>
       </C.Header>
