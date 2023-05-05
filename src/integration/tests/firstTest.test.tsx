@@ -22,19 +22,15 @@ import {
 } from "../helpers/testHelper";
 
 import {
-  HEADER_TEXT,
-  INFO_TEXT_RECEITAS,
-  INFO_TEXT_DESPESAS,
-  INFO_TEXT_BALANCO,
-  INPUT_TEXT_DATA,
-  INPUT_TEXT_CATEGORIA,
-  INPUT_TEXT_TITULO,
-  INPUT_TEXT_VALOR,
-  INPUT_TEXT_ADICIONAR,
-  TABLE_TEXT_DATA,
-  TABLE_TEXT_CATEGORIA,
-  TABLE_TEXT_TITULO,
-  TABLE_TEXT_VALOR,
+  SYSFINAN_LABEL,
+  REVENUE_LABEL,
+  EXPENSE_LABEL,
+  BALANCO_LABEL,
+  DATE_LABEL,
+  CATEGORY_LABEL,
+  TITLE_LABEL,
+  VALUE_LABEL,
+  ADD_LABEL
 } from "../strings/testStrings";
 
 describe("First test", () => {
@@ -51,16 +47,16 @@ describe("First test", () => {
 
   it("should be possible to view the title Sistema Financeiro.", () => {
     const tableArea = within(screen.getByTestId(HEADER_AREA_ID));
-    const headerText = tableArea.getByText(HEADER_TEXT);
+    const headerText = tableArea.getByText(SYSFINAN_LABEL);
     expect(headerText).toBeInTheDocument();
   });
 
   it("should be possible to view the fields Receitas, Despesas, and Balanço in the information area", () => {
     const infoArea = within(screen.getByTestId(INFO_AREA_ID));
 
-    const infoReceita = infoArea.getByText(INFO_TEXT_RECEITAS);
-    const infoDespesas = infoArea.getByText(INFO_TEXT_DESPESAS);
-    const inforBalanco = infoArea.getByText(INFO_TEXT_BALANCO);
+    const infoReceita = infoArea.getByText(REVENUE_LABEL);
+    const infoDespesas = infoArea.getByText(EXPENSE_LABEL);
+    const inforBalanco = infoArea.getByText(BALANCO_LABEL);
 
     expect(infoReceita).toBeInTheDocument();
     expect(infoDespesas).toBeInTheDocument();
@@ -91,11 +87,11 @@ describe("First test", () => {
   it("should be possible to view the fields Data, Categoria, Titulo, Valor, and the Adicionar button.", () => {
     const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
 
-    const inputData = inputArea.getByText(INPUT_TEXT_DATA);
-    const inputCateg = inputArea.getByText(INPUT_TEXT_CATEGORIA);
-    const inputTitutlo = inputArea.getByText(INPUT_TEXT_TITULO);
-    const inputValor = inputArea.getByText(INPUT_TEXT_VALOR);
-    const inputAdd = inputArea.getByText(INPUT_TEXT_ADICIONAR);
+    const inputData = inputArea.getByText(DATE_LABEL);
+    const inputCateg = inputArea.getByText(CATEGORY_LABEL);
+    const inputTitutlo = inputArea.getByText(TITLE_LABEL);
+    const inputValor = inputArea.getByText(VALUE_LABEL);
+    const inputAdd = inputArea.getByText(ADD_LABEL);
   
     expect(inputData).toBeInTheDocument();
     expect(inputCateg).toBeInTheDocument();
@@ -107,10 +103,10 @@ describe("First test", () => {
   it("should be possible to view the report with columns for Data, Categoria, Titulo, and Valor.", () => {
     const tableArea = within(screen.getByTestId(TABLE_AREA_ID));
 
-    const tableData = tableArea.getByText(TABLE_TEXT_DATA);
-    const tableCateg = tableArea.getByText(TABLE_TEXT_CATEGORIA);
-    const tableTitle = tableArea.getByText(TABLE_TEXT_TITULO);
-    const tableValor = tableArea.getByText(TABLE_TEXT_VALOR);
+    const tableData = tableArea.getByText(DATE_LABEL);
+    const tableCateg = tableArea.getByText(CATEGORY_LABEL);
+    const tableTitle = tableArea.getByText(TITLE_LABEL);
+    const tableValor = tableArea.getByText(VALUE_LABEL);
 
     expect(tableData).toBeInTheDocument();
     expect(tableCateg).toBeInTheDocument();
