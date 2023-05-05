@@ -17,6 +17,6 @@ export const INPUT_TEXT_ADICIONAR = 'Adicionar';
 /* TABLE AREA */
 export const TABLE_TEXT_DATA = 'Data';
 export const TABLE_TEXT_CATEGORIA = 'Categoria';
-export const TABLE_TEXT_TITULO = 'Titulo';
+export const TABLE_TEXT_TITULO = 'Título';
 export const TABLE_TEXT_VALOR = 'Valor';
 
