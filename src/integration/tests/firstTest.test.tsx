@@ -84,6 +84,16 @@ describe("First test", () => {
     expect(infoBalance).toHaveStyle("color: green");
   });
 
+  it("should be possible to view expense values in black in the Receitas", () => {
+    const revenueValue = screen.getByTestId(REVENUE_VALUE_ITEM_ID);
+    expect(revenueValue).toHaveStyle("color: #000");
+  });
+
+  it("should be possible to view expense values in black in the Despesas", () => {
+    const expenseValue = screen.getByTestId(EXPENSE_VALUE_ITEM_ID);
+    expect(expenseValue).toHaveStyle("color: #000");
+  });
+
   it("should be possible to view the fields Data, Categoria, Titulo, Valor, and the Adicionar button.", () => {
     const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
 
@@ -218,7 +228,7 @@ describe("First test", () => {
     expect(errorMessage).toBeInTheDocument(); */
 
   })
-
+  
   it("should not be possible to insert an item without a category.", () => {
 
   });
