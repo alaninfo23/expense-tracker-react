@@ -229,13 +229,37 @@ describe("First test", () => {
 
   })
   
-  it("should not be possible to insert an item without a category.", () => {
-
-  });
+  it("should not be possible to insert an item without a category.", () => {});
 
   it("should not be possible to insert an item with an empty title.", () => {});
 
   it("should not be possible to insert an item with an empty value.", () => {});
+
+  it("should not be possible to insert an item without the fields date, category, title and value", () => {
+    
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    
+    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
+    const buttonAddItem = inputArea.getByTestId(BUTTON_ADD_ITEM_ID);
+    userEvent.click(buttonAddItem);
+
+    // check if alert was called with the expected error message
+    expect(alertSpy).toHaveBeenCalledTimes(1);
+
+    const emptyFields = 'Data inválida!\nCategoria inválida!\nTítulo vazio!\nValor inválido!';
+    //const dateInvalid = 'Data inválida!';
+    //const categInvalid = 'Categoria inválida!';
+    //const titleInvalid = 'Título inválido!';
+    //const valueInvalid = 'Valor inválido!';
+
+    expect(alertSpy).toHaveBeenCalledWith(emptyFields);
+
+    // reset the spy
+    alertSpy.mockRestore();
+    /* const errorMessage = screen.getByText('Data inválida!');
+    expect(errorMessage).toBeInTheDocument(); */
+  });
+
 
   it("should not be possible to view items registered in other months in the current month.", () => {});
 
