@@ -29,8 +29,10 @@ export const InputArea = ({ onAdd }: Props) => {
     if(titleField === '') {
       errors.push('Título vazio!');
     }
-    if(valueField <= 0) {
+    if (valueField <= 0) {
       errors.push('Valor inválido!');
+    } else if (!valueField) {
+      errors.push('Insira um valor!');
     }
 
     if(errors.length > 0) {
