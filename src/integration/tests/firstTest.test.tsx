@@ -346,6 +346,40 @@ describe("First test", () => {
     alertSpy.mockRestore();
   });
 
+  it("should not be possible to enter an item with a negative value", () => {
+    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
+
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+
+    const dataInputArea = inputArea.getByTestId(INPUT_DATA_ITEM_ID);
+    const categInput = inputArea.getByTestId(INPUT_CATEG_ITEM_ID);
+    const titleInput = inputArea.getByTestId(INPUT_TITLE_ITEM_ID);
+    const valueInput = inputArea.getByTestId(INPUT_VALUE_ITEM_ID);
+    const buttonAddItem = inputArea.getByTestId(BUTTON_ADD_ITEM_ID);
+
+    const now = new Date(Date.now());
+    const day = now.getDate().toString().padStart(2, "0");
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const year = now.getFullYear();
+
+    const currentDateShort = `${year}-${month}-${day}`;
+    const typeCateg = "Salário";
+    const msgTitle = "Encora";
+    const valueNegative = "-100";
+
+    userEvent.type(dataInputArea, currentDateShort);
+    userEvent.selectOptions(categInput, typeCateg);
+    userEvent.type(titleInput, msgTitle);
+    userEvent.type(valueInput, valueNegative);
+    userEvent.click(buttonAddItem);
+
+    expect(alertSpy).toHaveBeenCalledTimes(1);
+    const valueNegativeError = "Valor inválido!";
+
+    expect(alertSpy).toHaveBeenCalledWith(valueNegativeError);
+    alertSpy.mockRestore();
+  });
+
   it("should not be possible to insert an item without the fields date, category, title and value", () => {
     const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
 
