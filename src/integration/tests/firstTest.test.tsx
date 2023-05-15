@@ -1,6 +1,7 @@
-//import React from "react";
-import { render, screen, within, waitFor} from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import moment from 'moment';
+
 import App from "../../App";
 
 import {
@@ -13,186 +14,377 @@ import {
   INPUT_TITLE_ITEM_ID,
   INPUT_VALUE_ITEM_ID,
   BUTTON_ADD_ITEM_ID,
-  NEXT_MONTH_ID,
-  PREV_MONTH_ID,
+  BUTTON_NEXT_MONTH_ID,
+  BUTTON_PREV_MONTH_ID,
   CURRENT_MONTH_ID,
+  BALANCE_VALUE_ITEM_ID,
+  REVENUE_VALUE_ITEM_ID,  
+  EXPENSE_VALUE_ITEM_ID,
+  assertTextArea,
+  insertRevenueOrExpenseItem,
+  assertElementHasStyle,
+  assertAlertCalledWith,
 } from "../helpers/testHelper";
 
-import { HEADER_TEXT,
-  INFO_TEXT_RECEITAS,
-  INFO_TEXT_DESPESAS,
-  INFO_TEXT_BALANCO,
-  INPUT_TEXT_DATA,
-  INPUT_TEXT_CATEGORIA,
-  INPUT_TEXT_TITULO,
-  INPUT_TEXT_VALOR,
-  INPUT_TEXT_ADICIONAR,
-  TABLE_TEXT_DATA,
-  TABLE_TEXT_CATEGORIA,
-  TABLE_TEXT_TITULO,
-  TABLE_TEXT_VALOR } from "../strings/testStrings";
+import {
+  SYSFINAN_LABEL,
+  REVENUE_LABEL,
+  EXPENSE_LABEL,
+  BALANCO_LABEL,
+  DATE_LABEL,
+  CATEGORY_LABEL,
+  TITLE_LABEL,
+  VALUE_LABEL,
+  ADD_LABEL,
+} from "../strings/testStrings";
 
-describe("First test", () => {
-/*   beforeEach(() => {
+describe("Viewing and Registration of Items in the Financial System.", () => {
+  beforeEach(() => {
     render(<App />);
-  }); */
-
-
-  beforeAll(() => {
-    const originalAlert = window.alert;
-    window.alert = jest.fn();
-    afterAll(() => {
-      window.alert = originalAlert;
-    });
-  });
-  it("should be able insert the salario", () => {
-    const now = new Date(Date.now());
-    const day = now.getDate().toString().padStart(2, "0");
-    const month = (now.getMonth() + 1).toString().padStart(2, "0");
-    const year = now.getFullYear();
-
-    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
-    const dataInputArea = inputArea.getByTestId(INPUT_DATA_ITEM_ID);
-    const categInput = inputArea.getByTestId(INPUT_CATEG_ITEM_ID);
-    const titleInput = inputArea.getByTestId(INPUT_TITLE_ITEM_ID);
-    const valueInput = inputArea.getByTestId(INPUT_VALUE_ITEM_ID);
-    const buttonAddItem = inputArea.getByTestId(BUTTON_ADD_ITEM_ID);
-
-    const currentDateShort = `${month}${day}${year}`;
-    const currentDate = `${day}/${month}/${year}`;
-    const typeCateg = "Salário";
-    const msgTitle = "Receita";
-    const valorInput = "100";
-
-    userEvent.clear(dataInputArea);
-
-    userEvent.type(dataInputArea, currentDateShort);
-    userEvent.selectOptions(categInput, typeCateg);
-    userEvent.type(titleInput, msgTitle);
-    userEvent.type(valueInput, valorInput);
-    userEvent.click(buttonAddItem);
-
-    const tableArea = within(screen.getByTestId(TABLE_AREA_ID));
-
-    expect(tableArea.getByText(currentDate)).toBeInTheDocument();
-    expect(tableArea.getByText(msgTitle)).toBeInTheDocument();
-    expect(tableArea.getByText(valorInput)).toBeInTheDocument();
-    expect(tableArea.getByText(typeCateg)).toBeInTheDocument();
   });
 
   it("should be possible to view the title Sistema Financeiro.", () => {
-    const tableArea = within(screen.getByTestId(HEADER_AREA_ID));
-    const headerText = tableArea.getByText(HEADER_TEXT);
-    expect(headerText).toBeInTheDocument();
+
+    assertTextArea(HEADER_AREA_ID, SYSFINAN_LABEL);
+
   });
 
   it("should be possible to view the fields Receitas, Despesas, and Balanço in the information area", () => {
-    const infoArea = within(screen.getByTestId(INFO_AREA_ID));
+    
+    assertTextArea(INFO_AREA_ID, REVENUE_LABEL);
+    assertTextArea(INFO_AREA_ID, EXPENSE_LABEL);
+    assertTextArea(INFO_AREA_ID, BALANCO_LABEL);
 
-    const infoReceita = infoArea.getByText(INFO_TEXT_RECEITAS);
-    const infoDespesas = infoArea.getByText(INFO_TEXT_DESPESAS);
-    const inforBalanco = infoArea.getByText(INFO_TEXT_BALANCO);
-
-    expect(infoReceita).toBeInTheDocument();
-    expect(infoDespesas).toBeInTheDocument();
-    expect(inforBalanco).toBeInTheDocument();
   });
 
   it("should be possible to view the date field in the format Month de Year in the information area.", () => {
+    
     const infoArea = within(screen.getByTestId(INFO_AREA_ID));
-    function formatDate(date = new Date()) {
-      const options: Intl.DateTimeFormatOptions = {
-        month: "long",
-        year: "numeric",
-      };
-      const formattedDate = date.toLocaleString("pt-BR", options);
-      const [month, year] = formattedDate.split(" de ");
-      return `${month.charAt(0).toUpperCase()}${month.slice(1)} de ${year}`;
-    }
 
-    const dateFormat = infoArea.getByText(formatDate());
-    expect(dateFormat).toBeInTheDocument();
+    moment.locale('pt-br');
+    const formatDate1 =  moment(new Date()).format('MMMM [de] YYYY');
+    const formatDate2 = formatDate1.charAt(0).toUpperCase() + formatDate1.slice(1);
+    console.log(formatDate2)
+
+    expect(infoArea.getByText(formatDate2)).toBeInTheDocument();
+
   });
 
   it("should be possible to view expense values in green in the Balanço", () => {
-    const infoArea = within(screen.getByTestId(INFO_AREA_ID));
-    const inforBalanco = infoArea.getByText("Balanço");
+
+    assertElementHasStyle(INFO_AREA_ID, BALANCE_VALUE_ITEM_ID, "color: green");
+
+  });
+
+  it("should be possible to view expense values in black in the Receitas", () => {
+
+    assertElementHasStyle(INFO_AREA_ID, REVENUE_VALUE_ITEM_ID, "color: #000");
+
+  });
+
+  it("should be possible to view expense values in black in the Despesas", () => {
+
+    assertElementHasStyle(INFO_AREA_ID, EXPENSE_VALUE_ITEM_ID, "color: #000");
+
   });
 
   it("should be possible to view the fields Data, Categoria, Titulo, Valor, and the Adicionar button.", () => {
+   
+    assertTextArea(INPUT_AREA_ID, DATE_LABEL);
+    assertTextArea(INPUT_AREA_ID, CATEGORY_LABEL);
+    assertTextArea(INPUT_AREA_ID, TITLE_LABEL);
+    assertTextArea(INPUT_AREA_ID, VALUE_LABEL);
+    assertTextArea(INPUT_AREA_ID, ADD_LABEL);
 
   });
 
   it("should be possible to view the report with columns for Data, Categoria, Titulo, and Valor.", () => {
-    const table = within(screen.getByTestId(TABLE_AREA_ID));
+    
+    assertTextArea(TABLE_AREA_ID, DATE_LABEL);
+    assertTextArea(TABLE_AREA_ID, CATEGORY_LABEL);
+    assertTextArea(TABLE_AREA_ID, TITLE_LABEL);
+    assertTextArea(TABLE_AREA_ID, VALUE_LABEL);
 
-    const data = table.getByText(INPUT_TEXT_DATA);
-    const categ = table.getByText(INPUT_TEXT_CATEGORIA);
-    const title = table.getByText(INPUT_TEXT_TITULO);
-    const valor = table.getByText(INPUT_TEXT_VALOR);
-
-    expect(data).toBeInTheDocument();
-    expect(categ).toBeInTheDocument();
-    expect(title).toBeInTheDocument();
-    expect(valor).toBeInTheDocument();
   });
 
-  it("should be able to insert an expense item.", () => {});
+  it("should be able to insert an revenue item.", () => {
 
-  it("should be able to insert a revenue item.", () => {});
-
-  it("should be able to insert an expense item with blue color.", () => {});
-
-  it("should be able to insert a revenue item with green color.", () => {});
-
-  it("should not be possible to insert an item without a date.", () => {});
-
-  it.only("should not be possible to insert an item without date .", async () => {
- 
-    render(<App />);
-
-    // elementos do formulário
-    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
-    const dataInputArea = inputArea.getByTestId(INPUT_DATA_ITEM_ID);
-    const categInput = inputArea.getByTestId(INPUT_CATEG_ITEM_ID);
-    const titleInput = inputArea.getByTestId(INPUT_TITLE_ITEM_ID);
-    const valueInput = inputArea.getByTestId(INPUT_VALUE_ITEM_ID);
-    const buttonAddItem = inputArea.getByTestId(BUTTON_ADD_ITEM_ID);
-  
-    // valores dos campos do formulário
-    const dateTest = '';
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+    const currentDateInput = moment(new Date()).format('DD/MM/YYYY');
     const typeCateg = "Salário";
-    const msgTitle = "Receita";
+    const msgTitle = "Encora";
+    const valorInput = "5000";
+
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, currentDate);
+
+    assertTextArea(TABLE_AREA_ID, typeCateg);
+    assertTextArea(TABLE_AREA_ID, msgTitle);
+    assertTextArea(TABLE_AREA_ID, `R$ ${valorInput}`);
+    assertTextArea(TABLE_AREA_ID, currentDateInput);
+    
+  });
+
+  it("should be able to insert a expense item.", () => {
+
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+    const currentDateInput = moment(new Date()).format('DD/MM/YYYY');
+    const typeCateg = "Aluguel";
+    const msgTitle = "Apartment";
+    const valorInput = "800";
+
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, currentDate);
+
+    assertTextArea(TABLE_AREA_ID, typeCateg);
+    assertTextArea(TABLE_AREA_ID, msgTitle);
+    assertTextArea(TABLE_AREA_ID, `R$ ${valorInput}`);
+    assertTextArea(TABLE_AREA_ID, currentDateInput);
+
+  });
+
+  it("should not be possible to insert an item without a date.", () => {
+
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const typeCateg = "Luz";
+    const msgTitle = "Encora";
     const valorInput = "100";
   
-    userEvent.type(dataInputArea, dateTest);
-    userEvent.selectOptions(categInput, typeCateg);
-    userEvent.type(titleInput, msgTitle);
-    userEvent.type(valueInput, valorInput);
-    userEvent.click(buttonAddItem);
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, null);
   
-    expect(window.alert).toHaveBeenCalledWith('Data inválida!');
+    const invalidDate = "Data inválida!";
+    assertAlertCalledWith(alertSpy, invalidDate);
+
   });
 
   it("should not be possible to insert an item without a category.", () => {
 
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const msgTitle = "Encora";
+    const valorInput = "100";
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+  
+    insertRevenueOrExpenseItem(null, msgTitle, valorInput, currentDate);
+  
+    const categInvalid = "Categoria inválida!";
+    assertAlertCalledWith(alertSpy, categInvalid);
+
   });
 
-  it("should not be possible to insert an item with an empty title.", () => {});
+  it("should not be possible to insert an item with an empty title.", () => {
 
-  it("should not be possible to insert an item with an empty value.", () => {});
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const typeCateg = 'Luz';
+    const valorInput = "100";
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+  
+    insertRevenueOrExpenseItem(typeCateg, null, valorInput, currentDate);
+  
+    const titleInvalid = "Título vazio!";
+    assertAlertCalledWith(alertSpy, titleInvalid);
 
-  it("should not be possible to view items registered in other months in the current month.", () => {});
+  });
 
-  it("should not be possible to view items registered in the current month in other months.", () => {});
+  it("should not be possible to insert an item with a value equal to zero", () => {
 
-  it("should be possible to insert a revenue item with highlighted category and value in green.", () => {});
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const typeCateg = 'Luz';
+    const msgTitle = "Encora";
+    const valorInput = "0";
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, currentDate);
+  
+    const valueInvalid = "Valor inválido!";
+    assertAlertCalledWith(alertSpy, valueInvalid);
+   
+  });
 
-  it("should be possible to insert an expense item with highlighted category and value in red.", () => {});
+  it("should not be possible to insert an item with an empty value", () => {
 
-  it("sshould be able to calculate the balance by subtracting expenses from revenues.", () => {});
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const typeCateg = 'Luz';
+    const msgTitle = "Encora";
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+      
+    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
+    userEvent.clear(inputArea.getByTestId(INPUT_VALUE_ITEM_ID));
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, null, currentDate);
 
-  it("should be able to update revenue and calculate the balance correctly.", () => {});
+    const emptyValue = "Insira um valor!";
 
-  it("should be able to clear the data, categoria, titulo, and valor fields after adding an item.", () => {});
+    assertAlertCalledWith(alertSpy, emptyValue);
+
+  });
+
+  it("should not be possible to enter an item with a negative value", () => {
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    const typeCateg = 'Luz';
+    const msgTitle = "Encora";
+    const valorInput = '-100';
+    const currentDate = moment(new Date()).format('YYYY-MM-DD');
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, currentDate);
+  
+    const valueInvalid = "Valor inválido!";
+
+    assertAlertCalledWith(alertSpy, valueInvalid);
+  });
+
+  it("should not be possible to insert an item without the fields date, category, title and value", () => {
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
+  
+    insertRevenueOrExpenseItem(null, null, null, null);
+  
+    const emptyFields =
+      "Data inválida!\nCategoria inválida!\nTítulo vazio!\nValor inválido!";
+
+    assertAlertCalledWith(alertSpy, emptyFields);
+
+  });
+
+  it("should not be possible to view items registered in other months in the current month.", () => {
+
+    const testDate = "2023-06-09";
+    const testDateTable = "09/06/2023";
+    const typeCateg = "Aluguel";
+    const msgTitle = "Apartment";
+    const valorInput = "800";
+
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, testDate);
+
+    assertTextArea(TABLE_AREA_ID, testDateTable, false);
+    assertTextArea(TABLE_AREA_ID, typeCateg, false);
+    assertTextArea(TABLE_AREA_ID, msgTitle, false);
+    assertTextArea(TABLE_AREA_ID, `R$ ${valorInput}`, false);
+  
+  });
+
+  it("should not be possible to view items registered in the current month in the others months.", () => {
+
+    const infoArea = within(screen.getByTestId(INFO_AREA_ID));
+    const btnextMonth = infoArea.getByTestId(BUTTON_NEXT_MONTH_ID);
+
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const testDateTable = moment(new Date()).format('DD/MM/YYYY');
+    const typeCateg = "Aluguel";
+    const msgTitle = "Apartment";
+    const valorInput = "800";
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, testDate);
+
+    userEvent.click(btnextMonth);
+
+    assertTextArea(TABLE_AREA_ID, testDateTable, false);
+    assertTextArea(TABLE_AREA_ID, typeCateg, false);
+    assertTextArea(TABLE_AREA_ID, msgTitle, false);
+    assertTextArea(TABLE_AREA_ID, `R$ ${valorInput}`, false);
+
+  });
+
+  it("should be possible to insert a expense item with highlighted value in red.", () => {
+
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const typeCateg = "Aluguel";
+    const msgTitle = "Apartment";
+    const valorInput = "800";
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, testDate);
+
+    const tableArea = within(screen.getByTestId(TABLE_AREA_ID));
+
+    expect(tableArea.getByText(`R$ ${valorInput}`)).toHaveStyle("color: red");
+
+  });
+
+  it("should be possible to insert an revenue item with highlighted value in green.", () => {
+
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const typeCateg = "Salário";
+    const msgTitle = "Apartment";
+    const valorInput = "800";
+  
+    insertRevenueOrExpenseItem(typeCateg, msgTitle, valorInput, testDate);
+
+    const tableArea = within(screen.getByTestId(TABLE_AREA_ID));
+
+    expect(tableArea.getByText(`R$ ${valorInput}`)).toHaveStyle("color: green");
+
+  });
+
+  it("should be able to calculate the balance by subtracting expenses from revenues.", () => {
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const typeCategExpense = "Aluguel";
+    const msgTitleExpense = "Apartment";
+    const valorInputExpense = "800";
+
+    insertRevenueOrExpenseItem(typeCategExpense, msgTitleExpense, valorInputExpense, testDate);
+
+    const typeCategRevenue = "Salário";
+    const msgTitleRevenue = "Apartment";
+    const valorInputRevenue = "800";
+
+    insertRevenueOrExpenseItem(typeCategRevenue, msgTitleRevenue, valorInputRevenue, testDate);
+
+    const infoArea = within(screen.getByTestId(INFO_AREA_ID));
+
+    expect(infoArea.getByTestId(BALANCE_VALUE_ITEM_ID)).toHaveTextContent(
+      `R$ ${parseFloat(valorInputRevenue) - parseFloat(valorInputExpense)}` 
+      );
+
+  });
+
+  it("should be able to update revenue and calculate the balance correctly.", () => {
+
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const typeCategRevenue = "Salário";
+    const msgTitleRevenue = "Encora";
+    const valorInputRevenue = "5000";
+
+    insertRevenueOrExpenseItem(typeCategRevenue, msgTitleRevenue, valorInputRevenue, testDate);
+
+    const typeCategExpense = "Aluguel";
+    const msgTitleExpense = "Apartment";
+    const valorInputExpense = "800";
+
+    insertRevenueOrExpenseItem(typeCategExpense, msgTitleExpense, valorInputExpense, testDate);
+
+    const msgTitleRevenue2 = "Bonus";
+    const valorInputRevenue2 = "1000";
+
+    insertRevenueOrExpenseItem(typeCategRevenue, msgTitleRevenue2, valorInputRevenue2, testDate);
+
+    const infoArea = within(screen.getByTestId(INFO_AREA_ID));
+
+    expect(infoArea.getByTestId(BALANCE_VALUE_ITEM_ID)).toHaveTextContent(
+      `R$ ${
+        parseFloat(valorInputRevenue) -
+        parseFloat(valorInputExpense) +
+        parseFloat(valorInputRevenue2)
+      }`
+    );
+  });
+
+  it("should be able to clear the data, categoria, titulo, and valor fields after adding an item.", () => {
+    
+    const testDate = moment(new Date()).format('YYYY-MM-DD');
+    const typeCategExpense = "Aluguel";
+    const msgTitleExpense = "Apartment";
+    const valorInputExpense = "800";
+
+    insertRevenueOrExpenseItem(typeCategExpense, msgTitleExpense, valorInputExpense, testDate);
+
+    const inputArea = within(screen.getByTestId(INPUT_AREA_ID));
+
+    expect(inputArea.getByTestId(INPUT_DATA_ITEM_ID)).toHaveValue("");
+    expect(inputArea.getByTestId(INPUT_CATEG_ITEM_ID)).toHaveValue("");
+    expect(inputArea.getByTestId(INPUT_TITLE_ITEM_ID)).toHaveValue("");
+    expect(inputArea.getByTestId(INPUT_VALUE_ITEM_ID)).toHaveValue(0); 
+
+  });
 });
